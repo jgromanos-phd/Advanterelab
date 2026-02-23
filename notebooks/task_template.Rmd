@@ -1,0 +1,66 @@
+---
+# Rmarkdown header. it use Use the YAML syntax. 
+# Just copy the ---YAML block --- and change title, subtyle, author and date
+title: "Task 1 Introduction" 
+subtitle: "People Analytics"
+author: "Jesús García Romanos"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+
+# store the output in the subdirectory reports
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir=file.path(dirname(inputFile),"reports" )) }) 
+---
+
+# Setup
+
+Within project directory, if they do not exists, create the following directories.
+
+- **data** to store the data created. R native dataformat is rds.\
+- **reports** to store the HTML output files created when knitting.
+
+```{r setup, include=FALSE}
+#this chunk is hidden from the notebook output by adding ,include=FALSE to the chunk name.
+
+library(tidyverse) 
+
+library(here)
+knitr::opts_knit$set(root.dir = here::here())
+
+```
+
+# Analysis
+
+
+### Prompt 1
+
+```{r Prompt 1}
+my_name = "Jesús"
+city_of_birth = "Avila"
+
+cat(my_name, "was born in ", city_of_birth)
+
+numbers=0:9
+cat("the numbers are:", numbers)
+
+myfullname = tibble::tibble(name="Jesús",surname="García Romanos")
+print(myfullname)
+print(myfullname["surname"])
+
+
+cat(myfullname$name,myfullname$surname)
+
+
+```
+
+```{r}
+getwd()
+```
+

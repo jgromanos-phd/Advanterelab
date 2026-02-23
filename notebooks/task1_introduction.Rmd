@@ -1,0 +1,163 @@
+---
+# Rmarkdown header. it use Use the YAML syntax. 
+# Just copy the ---YAML block --- and change title, subtyle, author and date
+title: "Task 1 Introduction" 
+subtitle: "People Analytics"
+author: "Jesús García Romanos"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+
+    code_folding: hide
+
+# store the output in the subdirectory reports
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir=file.path(dirname(inputFile),"reports" )) }) 
+---
+
+# Execute your Rnotebook
+
+- **Run Code by line**: Use `Ctrl + Enter` (Windows) or `Cmd + Enter` (Mac) to run lines of code directly from the chunks (scripts contained in the grey areas).
+- **knit the complete Rnotebook**: press the 🧶 Knit buttom at the top 
+
+# Setup
+
+## Define directories
+
+We will organize your project files into specific folders within the main project directory. ***If they do not exist, create the following directories and move this Rnotebook —task1_introduction.Rmd— to the notebooks directory ***.
+
+* **data** to store the data sources and data created. 
+* **notebooks** for storing R notebooks.
+
+This directory will be created the first time you knit (Execute) this Rnotebook.
+
+* **reports** to store the web (HTML) output files generated when knitting.
+
+## Load Packages
+
+- Base R has basic functions (commands), but we can extend R with +22,000 packages. 
+
+- During the course, we will make extensive use of **tidyverse**, a collection of R packages designed to work together for data science, using a consistent and beginner-friendly style. So we will load it into all our notebooks. 
+
+- **here()** package helps us to work neatly in the project working directory when I move Rnotebooks between computers
+
+### Do not worry to see
+
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    
+- It just indicates that when you load the library, you mask some functions with the same name that were already loaded. 
+
+```{r setup}
+
+# ==============================================================================
+# library(tidyverse) loads the following packages:
+# ==============================================================================
+
+# 1. ggplot2   -> Data Visualization (The "Grammar of Graphics")
+# 2. dplyr     -> Data Manipulation (filter, select, mutate, summarize)
+# 3. tidyr     -> Data Tidying (reshaping long/wide formats)
+# 4. readr     -> Data Import (fast reading of .csv, .tsv, and fwf)
+# 5. purrr     -> Functional Programming (replacing loops with map functions)
+# 6. tibble    -> Modern Data Frames (cleaner printing and stricter subsetting)
+# 7. stringr   -> String Manipulation (all functions start with str_)
+# 8. forcats   -> Factor Handling (tools for categorical variables)
+# 9. lubridate -> Date/Time Wrangling (parsing and math with temporal data)
+
+# ==============================================================================
+
+library(tidyverse)
+# ==============================================================================
+# Masking happens when two packages contain functions with the same name.
+# When you load a package, its functions take priority over previously loaded ones.
+# The conflicts message simply tells you which version R will use by default.
+# ==============================================================================
+
+library(here)
+knitr::opts_knit$set(root.dir = here::here())
+
+```
+**Are you feeling a bit lost here?** 
+
+
+- Think of R like a TV with multiple streaming apps installed and a single remote control with a button labeled **filter**. 
+  Base R comes with a built-in app called stats, which includes a function called ***filter()*** that runs when you press the **filter** button. 
+  
+  When you load dplyr, you install another app that also has a function ***filter()*** to run when you press the **filter** button.
+  Now you have two programs named ***filter()***. When you press the **filter** button, R has to decide which apps to use.
+  
+  The conflict message is R saying, as the ***filter()*** from dplyr was the latest to load:
+  “From now on, when you press **filter**, I’ll use the one from dplyr instead of the one from stats.” 
+  
+  If you really want the other one, you can say:
+  
+  *stats::filter()*
+  
+  That’s like saying:
+  “No, I meant the ***filter()*** function from the built-in app.”  
+  
+
+In future tasks, the setup chunk will be **hidden** from the notebook output by adding *,include=FALSE* to the chunk name, however R will load packages and mask functions without displaying the above messages.
+
+# where am I ?
+
+To know in which directory I am working I use *getwd()*
+```{r}
+getwd()
+```
+
+# what files do I have in my project?
+
+To know which files I have in my project directory I use *dir()*
+```{r}
+dir()
+```
+
+
+# Exploring R Commands
+
+
+### Define and show values
+
+vales are simple variables to be used in any moment. 
+
+- Assign a name to a variable. **<-** and **=** are used indistinctly 
+
+      myname = "Jesús"
+      myname <- "Jesús"
+    
+- **cat()**  function to concatenate strings and display them
+```{r define values}
+my_name = "Jesús"
+myname <- "Jesús"
+
+city_of_birth = "Avila"
+
+cat(my_name, "was born in ", city_of_birth)
+
+numbers=0:9
+cat("the numbers are:", numbers)
+```
+
+### Define and show data
+
+Normally you work with structured data like data frames (tibble in tidyverse) where you define structure information, like the full name wich has to parts, a name and a surname, and you can work with the full name, or with each part separately depending on your needs
+
+- **print()**  function to print structure data.  cat() cannot handle this type of data, so we use print() instead.
+```{r Define data}
+
+myfullname = tibble(name="Jesús",
+                    surname="García Romanos")
+
+print(myfullname)
+print(myfullname["surname"])
+
+
+cat(myfullname$name,myfullname$surname)
+
+
+```
