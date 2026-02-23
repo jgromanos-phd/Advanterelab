@@ -17,7 +17,7 @@ output:
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
-                        output_dir=file.path(dirname(inputFile),"reports" )) }) 
+                        output_dir=here::here("reports")) }) 
 ---
 
 # Execute your Rnotebook

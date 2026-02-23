@@ -1,7 +1,7 @@
 ---
 # Rmarkdown header. it use Use the YAML syntax. 
 # Just copy the ---YAML block --- and change title, subtyle, author and date
-title: "Task 1 Introduction" 
+title: "Template" 
 subtitle: "People Analytics"
 author: "Jesús García Romanos"
 date: "`r Sys.Date()`"
@@ -16,7 +16,7 @@ output:
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
-                        output_dir=file.path(dirname(inputFile),"reports" )) }) 
+                        output_dir=here::here("reports")) }) 
 ---
 
 # Setup
@@ -36,31 +36,9 @@ knitr::opts_knit$set(root.dir = here::here())
 
 ```
 
-# Analysis
-
-
-### Prompt 1
-
-```{r Prompt 1}
-my_name = "Jesús"
-city_of_birth = "Avila"
-
-cat(my_name, "was born in ", city_of_birth)
-
-numbers=0:9
-cat("the numbers are:", numbers)
-
-myfullname = tibble::tibble(name="Jesús",surname="García Romanos")
-print(myfullname)
-print(myfullname["surname"])
-
-
-cat(myfullname$name,myfullname$surname)
-
-
-```
+# First Title
 
 ```{r}
-getwd()
+
 ```
 
