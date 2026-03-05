@@ -1,0 +1,170 @@
+---
+# Rmarkdown header. it use Use the YAML syntax. 
+# Just copy the ---YAML block --- and change title, subtyle, author and date
+title: "Task 3 data cleaning" 
+subtitle: "People Analytics"
+author: "Jesús García Romanos"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+
+# store the output in the subdirectory reports
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir=here::here("reports")) }) 
+---
+
+# Setup
+
+```{r setup, include=FALSE}
+#this chunk is hidden from the notebook output by adding ,include=FALSE to the chunk name.
+
+library(tidyverse) 
+
+library(here)
+
+```
+
+### Read df_attrition
+
+✍️ your task
+
+- read df_atrition.rds
+
+
+```{r}
+
+
+
+```
+
+
+# Add new employee
+
+
+### Read new employee data
+
+🔦 The Research & Development department has sent us data from a new employee, that we want to append to our df_attrition database, The format of the data is whit the names of each column (variables), followed but its value. Those variables that the user didn't know wrote "**dontknow**".
+
+✍️ your task
+
+- Download the file employee_record.txt from Moodle to the data directory.
+- Review the file and read it into df_new_employee
+- Compare the structure of the new record with that of the df_attrition
+
+📝️ R commands
+    - **read_tsv()**: read tab separated files. 
+      💡 It is a particular case of **read_delimin()** is a command to read plain texts, which allows to read plain text with any separator.  
+
+```{r read_new_employee}
+
+```
+### Transform new employee data
+
+🔦 The  file employee_record.txt has each employee variable in a row, so we need to transpose rows by columns so we can add to df_attrition data frame. we do so with pivot_wider, which transforma rows into columns. 
+
+✍️ your task
+
+- transpose df_new_employee and convert types to match the structure of df_attrition
+- Add the new employee record to df_attrition
+
+📝️ R commands
+    - pivot_wider() transform rows into columns  
+    - type_convert() change the type of columns, to the more likely one.  
+      i.e. if every value is a number transforms character into numeric. 
+    - bind_rows() allows to add new employees to an existing data frame  
+    
+```{r transform_new_employee}
+
+
+```
+
+### Merge new employee into df_attrition
+
+✍️ your task
+
+- Add the new employee record to df_attrition
+
+📝️ R commands
+
+    - bind_rows() allows to add new employees to an existing data frame 
+
+```{r bind_new_employee}
+
+
+```
+
+# Data cleaning
+
+## Filling missing values
+
+### show missing values
+
+✍️ your task
+
+- show employees with missing values, subseting columns EmployeeNumber, Age, and any column with missingvalues
+
+📝️ R commands
+
+- **where(~ any(is.na(.)))**: allows to select columns with missing values.
+- **pull()**: convert a variable into a value vector
+- **paste()**: concatenate a vector
+    
+
+```{r show_NA}
+
+```
+
+### Fill missing values
+
+✍️ your task
+
+- Fill missing Monthly income values with the average of all employees with the same Job role, level, and department.
+- Fill the missing values of TotalWorkingYears, estimating their total working years using their years at the current company plus an adjustment based on how many companies they have worked for.
+
+📝️ R commands
+
+- **group_by()**: group observations (employees) by several variables, so you can estimate statistics by each unique value of those groups.
+- **ungroup()**: remove grouping to avoid future mishandling of groups
+
+
+```{r fill_NA}
+
+```
+
+## Remove duplicates rows
+
+✍️ your task
+
+- Identify duplicated rows using  *group_by* and *filter*.
+- Identify duplicated rows using  **duplicate(.)**.
+
+📝️ R commands
+
+- **duplicate(.)**: Identify the duplicated rows, omitting first duplicated observation. 
+- **distinct()**: Removing duplicates rows.
+
+
+
+```{r}
+
+
+```
+
+# Save data
+
+✍️ your task
+
+- save df_attrition into disk for future use.
+
+```{r}
+
+
+```
+
+**Congratulations, we have finished our Data Cleaning!**

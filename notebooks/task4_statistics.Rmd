@@ -1,0 +1,539 @@
+---
+# Rmarkdown header. it use Use the YAML syntax. 
+# Just copy the ---YAML block --- and change title, subtyle, author and date
+title: "Task 4 Statistics" 
+subtitle: "People Analytics"
+author: "Jesús García Romanos"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+
+# store the output in the subdirectory reports
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir=here::here("reports")) }) 
+---
+
+# Setup
+
+Within project directory, if they do not exists, create the following directories.
+
+- **data** to store the data created. R native dataformat is rds.\
+- **reports** to store the HTML output files created when knitting.
+
+```{r setup, include=FALSE}
+#this chunk is hidden from the notebook output by adding ,include=FALSE to the chunk name.
+
+library(tidyverse) 
+
+library(here)
+
+```
+
+### Read df_attrition
+
+✍️ your task
+
+- read df_atrition.rds
+```{r read_data}
+
+
+```
+
+# Essential statistics
+
+## Centrality
+
+💡 mean, median and mode.
+
+- **mean** is the average value of a a variable
+
+  $$\bar{x} = \frac{\sum_{i=1}^{n} x_i}{n}$$
+- **median** is the percentile 50 of the sample, where we have half of employees with higher values and half with lower
+- **mode** is the most frequent value
+
+They are related according the following picture
+```{r, echo=FALSE, out.width="70%"}
+# ![](img/Centrality_relations.png) can be use to include relative paths without the here() proyect base paths.
+knitr::include_graphics(here::here("img", "Centrality_relations.png"))
+```
+
+### Mean and median
+
+✍️ your task
+
+- Calculate the mean for Age,  Distance from home, and Monthly income. 
+- Calculate the median of Age
+- print a message indicating the mean and median for Age with two decimals.
+- explain the meaning of their relationship
+
+📝️ R commands
+
+- **mean()**: calculate the mean of a variable. Use na.rm = TRUE) to ignore missing values
+- **median()**: calculate the median of a variable. Use na.rm = TRUE) to ignore missing values
+- **round()**: round numbers to fix number of decimals.
+- "\\n": within cat allows to print a line break.
+
+```{r}
+
+
+```
+
+💡 If the mean is higher than the median, right-skewed distributions raise the average age. A few more older staff than younger ones. Since the difference is small, ages are fairly balanced overall.
+
+🔁 Alternatively, I can use **summarize** from *tidyverse*
+
+✍️ your task
+
+- Using summarize, calculate the mean for Age,  Distance from home, and Monthly income. Calculate the median of Age
+
+📝️ R commands
+
+- *mean*, *median* can be used within *summarize*, 
+
+```{r}
+
+```
+
+🔁 **summarize** along with across allow working with multiple variables simultanusly.
+
+✍️ your task
+
+- Using summarize and across, calculate the mean for Age,  Distance from home, and Monthly income. Calculate the median of Age
+
+📝️ R commands
+
+- **across()**: within summarize can be use to calculate a statistic across several variables. 
+- **.names = "avg_{.col}** within across allows to add a prefix before each variable name {.col}.
+- **round()**: round number before printing
+
+```{r}
+
+
+
+
+```
+
+### Statistics by group
+
+💡 obtaining statistics by any grouping is straightforward with summarize.
+
+✍️ your task
+
+-  Obtain the above centrality measures by department and Gender.
+```{r}
+
+
+
+```
+💡 summarize, calculate each measure for each group. If no grouping it calculate them for the whole data.
+
+
+### Mode
+
+The mode is the value that has highest number of occurrences in a set of data.  R does not have a standard in-built function to calculate mode, but you can calculate it. 
+
+✍️ your task
+ 
+- group by age,  summarize the number of observations by age, and filter those which have the maximum value.
+- Obtain similar results counting the number of observations with count, and extracting the maximum values.
+
+📝️ R commands
+
+- **n()**: within summarize number of observations of each group
+- **max(n)**: calculate the maximum value of n
+- **count()**: count the number of observations of each value of the variable
+- **slice_max()** filter the n maximum values of a data.
+
+```{r}
+
+
+```
+
+💡 The mode could be misleading when working with real numbers or long series. For instance, the mode for monthly income is 2342, which is the salary of four employees. This result is not very informative when dealing with more than a thousand employees.
+
+✍️ your task
+
+- calculate the mode of Monthly Income and think of the representativeness.
+```{r}
+
+```
+
+
+## Spread
+
+Variance (**var**) and Standard Deviation (**sd**) tell you how much your data points (like employee ages) differ from the average. Sd is reported in the same units as the variable being measured.
+
+✍️ your task  
+- calculate Variance and standard deviation
+
+📝️ R commands  
+- **var()**: Variance
+- **sd()**:  Standard deviation
+
+
+```{r}
+
+
+
+```
+
+
+🔁 With **summarize** you can calculate multiple descriptive statistics
+
+
+```{r, echo=FALSE, out.width="70%"}
+# ![](img/Boxplot_measures.jpg) can be use to include relative paths without the here() proyect base paths.
+knitr::include_graphics(here::here("img", "Boxplot_measures.jpg"))
+```
+
+✍️ your task  
+
+- calculate the below statistics for Age using summarize.
+
+📝️ R commands 
+
+- Central Tendency: **mean()**, **median()**
+- Spread/Variation: **sd()** standard deviation, **var()** variance, **IQR()** interquartile range
+- Range: **min()**, **max()**
+- Counts: **n()** number of observations. **n_distinct()** unique values.
+- **list()**: concatenate several statistics within the same summarize
+- **knitr::kable()**: Display the table nicely instead of the tibble data. *digits* within kable indicates how many decimal to show.
+
+```{r}
+
+
+```
+
+## Correlation
+
+✍️ your task  
+
+- Select 10-12 numeric or logical variables and include them in a correlation matrix.
+
+📝️ R commands 
+
+- **where**: is a function used within select to indicate that you want to include all columns where the condition applies. In our example, we want to include all columns where the column type is a number using is.numeric().
+- **cor()**: calculate the correlation of a dataframe, store its value in *my_corr* and show it.  use="pairwise.complete.obs" to omit observations with missing values.
+
+```{r}
+
+
+
+```
+💡 We only used 11 variables, and the matrix is a bit messy!*
+
+
+# Visual inspection through graphics. 
+
+Tables are helpful, but we require more advanced visualization tools for clearer data understanding.
+
+💡 Why visualization is necessary? https://youtu.be/jbkSRLYSojo
+
+### Visual correlations: corrplot.
+
+✍️ your task  
+
+-  Displaying correlations with corrplot, using various methods.
+
+📝️ R commands 
+- **corrplot::corrplot()**: visual correlations. type = 'lower' only show lower correlation matrix.
+- *method = "number"*, number.cex = 0.6; *method = "circle"*; *method = "pie"*: various method within *corrplot*.
+
+💡Have you noticed **corrplot::**? When you use a package a few times, instead of loading it for your complete session, you can just load a command when you use it using **name_package::command**. This way, the computer needs less memory and runs faster. Nowadays, as we usually have big memories, it is not that important.
+
+```{r}
+
+
+```
+
+# Simple graphics  
+
+### Pies
+
+A pie chart of a qualitative data sample consists of pizza wedges that visually display the frequency distribution.
+
+✍️ your task  
+
+-  Displaying a pie with number of employees by department using the functions studied so far: group our dataset by Department and count the number of employees in each group.s.
+
+📝️ R commands 
+
+- **pie(***var*,*labels***)**: draws a pie. 
+
+💡 🔥 pie is not part of the tidyverse universe, so it does not understand pipes  **(%>%)**. This can be overcome by using **{ pie() }** and referring to the pipe's output as **.** within the command.
+
+
+```{r}
+
+
+
+
+```
+
+🔁  calculating the number of employees by department can be more easily calculate with **table()**
+
+, which calculates frequencies for a variable and then passes them directly to the pie function.
+
+✍️ your task  
+
+-  Displaying a pie with number of employees by department using table()
+
+📝️ R commands 
+
+- **table(***var**)**: calculate a table of frequencies.
+- **col()**: within pie allows you to choose the colors by passing a vector of colors.
+- **c(x,y,x)**: creates a vector with x, y and z.
+
+💡 you can seek colors names at [colors in R](https://r-charts.com/colors/)
+
+```{r}
+
+
+
+
+```
+
+
+
+### Scatter plots
+
+It is one the best graphics to examine the relationship between two variables.
+
+✍️ your task  
+
+-  Draw a scatter plot between job level and monthly income
+-  Draw a scatter plot between total working years and monthly income
+
+📝️ R commands
+
+- **plot(***var1*,*var2***)** Draw a scatter plot with var1 in x axis and var2 in y axis.
+
+
+```{r}
+
+
+```
+
+### Histograms and density function
+
+A histogram shows the counts of values in each range, while the density plot shows the proportion of values in each range.
+
+✍️ ️ your task  
+
+-  Draw a histogram of monthly income.
+-  Draw a histogram of monthly income, choosing your own breaks (the points that divide the data range into intervals).
+-  Draw a density function of monthly income.
+
+📝️ R commands
+
+- **hist(***var1***)** Draw a histogram of var1.
+- **breaks**: within hist, provide a vector to separate each bin (histogram column). 
+- **main** and **xlab** within hist or plot allows to define title and x axis.
+- **density(***var1***)**: calculate the density of var1. 
+
+```{r}
+
+
+
+
+```
+
+### Box-plots
+
+Provides a summary of the data based on five key summary statistics: the minimum, first quartile (Q1), median (Q2), third quartile (Q3), and maximum
+
+```{r, echo=FALSE, out.width="70%"}
+# ![](img/boxplot_elements.webp).
+knitr::include_graphics(here::here("img", "boxplot_elements.webp"))
+```
+
+- **Quartiles**: points with Q1 (25%), Q2 or median (50%) , Q3(75%) of the distribution.
+- **IQR**: Distance between Q1 and Q3
+- **Whisker**: lines representing values up-to  1.5 IQR from Q1/Q3; *Staples*:  vertical lines at the end of each whisker
+- **Outliers**: Points beyond 1.5 IQR 
+
+✍️ your task  
+
+-  Display the summary and box plot for MonthlyIncome.
+
+📝️ R commands 
+
+- **boxplot()**: draws a boxplot. horizontal = TRUE makes it horizontal and col= "your_color" change color
+```{r}
+
+
+```
+
+🔁 Adding five numbers to your box plot. 
+
+✍️ your task  
+
+-  🔥 Display the summary and box plot for MonthlyIncome showing the five numbers.
+
+📝️ R command
+
+- fivenum() provides the minimum, lower-hinge (Q1), median(Q2), upper-hinge(Q3) and maximum of a variable.
+- *axes = FALSE* within boxplot() remove the axes of box plot.
+- text(x = your_x_positions, labels = your_labels, y = your_y_positions): draws labels in the position x and y.
+
+```{r}
+
+```
+
+# A package for graphics: ggplot
+
+
+💡 Best, use the ggplot2 package to create graphics following the Grammar of Graphics [The Grammar of Graphics](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149/). ggplot2 builds complex graphics by layering different components.. 
+
+💡 Next chunk shows how to display a graph which is stored in disk.
+```{r, echo=FALSE, out.width="90%"}
+# ![](img/Grammar_of_graphics.png) # the graph can also be included in the comments area
+knitr::include_graphics(here::here("img", "Grammar_of_graphics.png"))
+```
+
+## scatter plots
+
+✍️ your task
+
+- Plot those variables together with ggplot using theme_classic 
+
+📝️ R commands
+
+- **ggplot()**: draw advance graphics plots within a canvas.
+- **aes(x=var1,y=var2, color = var3)**: within ggplot indicates x and y variables and color variable
+- **geom_point()**: add a scatter plot to the canvas.
+- **labs()**: Add titles to canvas and axis.
+- **theme_classic()**: one of the many themes to draw canvas. 
+
+ 
+
+```{r}
+
+
+
+```
+🔦 In the second plot the points of each employee have a different color, depending on gender.
+
+💡 Each layer of the image can be change separately. For example, you can change the aspect of the plot, just using another theme.
+
+✍️ your task
+
+- Plot those variables together with ggplot using theme_bw 
+
+📝️ R commands
+
+- **theme_minimal()**: A minimal themes to draw canvas with less lines. 
+- **theme_bw()**: a theme with lines.
+
+💡 You can find hundreds of plots without writing code at:
+
+- [The ggplot2 Extensions Gallery](https://exts.ggplot2.tidyverse.org/gallery/): The official hub for all packages that expand ggplot.
+- [The R Graph Gallery](https://r-graph-gallery.com/): A fantastic visual resource that shows the code alongside the result.
+
+```{r}
+
+
+
+```
+
+## histograms
+
+✍️ your task
+
+- Plot the histogram of monthly income using ggplot 
+
+📝️ R commands
+
+ **geom_histogram()**: draw an histogram; within histogram fill defines the filling color, color define the color lines; breaks add breaks. All other layers of ggplot can be used.
+
+```{r}
+
+
+```
+
+## Box plots
+
+✍️ your task
+
+- box plot of monthly income using ggplot 
+
+📝️ R commands
+
+ - **geom_boxplot()**: draw an histogram; within histogram fill defines the filling color, staplewidth define witht of the staple.
+ - *coord_flip()**: flips the chart, i.e. makes it horizontal
+ - **stat_summary()**: add five num stats. *vjust* indicates were to place the text.
+
+```{r}
+
+
+
+
+```
+
+## bars and pies
+
+✍️ your task
+
+- Plot a stack bar of Education field using ggplot.
+- Plot a pie plot of Education field using ggplot.
+
+📝️ R commands
+
+- **geom_bar()**: Draws a stacked bar. aes(x = "", fill = stacked_varible)
+- **coord_polar(y)**: Convert the stacked bar into a pie.
+- **theme_void()**: Empty theme
+
+```{r}
+
+
+
+```
+
+✍️ your task
+
+- 🔥 Plot a pie of Educational Field, changing colors, adding counts and percentage in the legend.
+
+📝️ R commands
+
+- **geom_col()**: Stack a variable where you need to provide the maths for the The size of each stack (y) while geom_bar() calculate it for you. You have more control, but a bit more complex.
+- **scale_fill_manual**: values -> choose your own filling colors, name -> legend header.
+```{r}
+
+
+
+```
+
+# Summary statistics
+
+*A summary statistics table for your report*
+
+✍️ your task
+
+- Display a summary of *numeric* and *character* statistics using **vtable::sumtable()**.
+- 🔥 Display the summary of numeric variables adding an space to the name of the variables.
+
+📝️ R commands
+
+- **vtable::sumtable()**: summary statistics 
+- **rename_with()** rename data frame variables.
+- **gsub()**: substitute a string with another. Require 
+[regex cheat sheet](https://rstudio.github.io/cheatsheets/regex.pdf)
+
+
+```{r}
+
+
+                
+
+```
+
+
+**Congratulations, we have finished our Exploratory Data Analysis!**
+
+

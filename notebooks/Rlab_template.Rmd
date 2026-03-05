@@ -21,10 +21,7 @@ knit: (function(inputFile, encoding) {
 
 # Setup
 
-Within project directory, if they do not exists, create the following directories.
-
-- **data** to store the data created. R native dataformat is rds.\
-- **reports** to store the HTML output files created when knitting.
+*The setup chunk is hidden, change the first line to include=TRUE to show it*
 
 ```{r setup, include=FALSE}
 #this chunk is hidden from the notebook output by adding ,include=FALSE to the chunk name.
@@ -32,11 +29,20 @@ Within project directory, if they do not exists, create the following directorie
 library(tidyverse) 
 
 library(here)
-knitr::opts_knit$set(root.dir = here::here())
+
 
 ```
 
-# First Title
+The following icons are used in the class exercises.
+
+✍️ Your task.
+📝️ R commands.
+🔁 Alternative ways of doing things.
+🔦 Information.
+💡 Deep dive.  
+🔥 This topic can be challenging—feel free to reach out with any questions.
+
+# Section Title
 
 ```{r}
 

@@ -1,0 +1,458 @@
+---
+# Rmarkdown header. it use Use the YAML syntax. 
+# Just copy the ---YAML block --- and change title, subtyle, author and date
+title: "Task 2 Understanding data" 
+subtitle: "People Analytics"
+author: "Jesús García Romanos"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+
+# store the output in the subdirectory reports
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir=here::here("reports")) }) 
+---
+
+# Setup
+
+✍️ your task
+
+- Open the project you created for class exercisees e.g. **Rlab**
+- Download the file: 'data/01 HR-Employee-Attrition_untidy.csv' inside data folder
+
+
+```{r setup, include=FALSE}
+#this chunk is hidden from the notebook output by adding ,include=FALSE to the chunk name.
+
+library(tidyverse) 
+
+library(here)
+
+# =============================================================================
+# Check if you have follow the instructions.
+# Don’t worry about the lines below—they’re just here to detect the usual mistakes students make when they knit this task.
+
+# 1, Check that Have you open this notebook within a project?
+# Check if an Rproj file exists in the current or parent directories
+is_in_project <- tryCatch({
+  !is.null(rprojroot::find_rstudio_root_file())
+}, error = function(e) FALSE)
+
+# Halt execution if not in a project
+if (is.null(rstudioapi::getActiveProject())) {
+  stop("\n--- ERROR: PROJECT NOT DETECTED ---\n",
+       "You must open the project for class exercises before knitting.\n",
+       "This ensures your file paths work correctly & you can share your programs!")
+}
+
+# 2. Check that you have store task2 within the notebooks directory
+# Full path of the current Rmd file
+
+get_current_rmd <- function() {
+  # Case 1: knitting (current_input works)
+  if (!is.null(knitr::current_input())) {
+    return(normalizePath(knitr::current_input()))
+  }
+  
+  # Case 2: interactive execution
+  # Try using rstudioapi to detect the active document
+  if (rstudioapi::isAvailable()) {
+    context <- rstudioapi::getActiveDocumentContext()
+    if (!is.null(context$path) && nchar(context$path) > 0) {
+      return(normalizePath(context$path))
+    }
+  }
+  
+  # Fallback
+  warning("Cannot detect the R Markdown file. Make sure you are running this in RStudio.")
+  return(NULL)
+}
+current_rmd <- get_current_rmd()
+
+# Expected notebooks directory (project-root/notebooks)
+notebooks_dir <- normalizePath(here("notebooks"))
+
+# 3. Check if the task2.rmd file is inside notebooks directory
+if (!startsWith(current_rmd, notebooks_dir)) {
+  stop(
+    paste0(
+      "\n\nFILE LOCATION ERROR:\n",
+      "This R Markdown file must be inside the folder:\n",
+      "notebooks/\n\n",
+      "Current location:\n",
+      current_rmd, "\n\n",
+      "Please move the .Rmd file into the 'notebooks' directory inside the project root.\n\n"
+      
+    )
+  )
+}
+
+# have you download the file into the data directory?
+file_path <- here("data", "01 HR-Employee-Attrition_untidy.csv")
+
+if (!file.exists(file_path)) {
+  stop(
+    paste0(
+      "\n\nDATA FILE NOT FOUND:\n",
+
+      "Please:\n",
+      "1. Create a folder named 'data' in your project directory\n",
+      "2. Download the file: '", 
+          fs::path_rel(file_path, start = here()),
+          "' inside that folder\n"
+
+    )
+  )
+}
+
+# 4. clean up the environment
+rm(get_current_rmd,notebooks_dir,is_in_project,file_path,current_rmd)
+
+
+# end of checking that you have followed instructions
+# =============================================================================
+
+```
+
+# Data Analysis
+
+
+**Let's start understanding our data!**
+
+## Read data
+
+✍️ your task
+
+- Read *"01 HR-Employee-Attrition_untidy.csv"* file into a dataframe named df_attrition.org
+- display the object you have created
+
+💡 For big files, it’s a good idea to keep the original data in a DataFrame with **.org** at the end of its name, and work on a copy without it. That way, you can always go back to the original if needed.
+
+
+📝️ R commands 
+
+  - **read_csv()** reads a coma separated file.
+  - **ls()** list objects in our environment, pattern = "^df" indicate those whose name start with df
+
+
+🔦 let's understand the difference:
+
+  - ls() → “list stuff in R” (objects in memory, i.e your running environment)
+  - dir() → “directory” (files on your computer)
+
+💡 missing data versus empty character  
+
+Programming languages differentiate between missing values and empty character strings. When importing data from a .csv file, empty strings in a column are often converted to missing values (NA) to facilitate consistent data processing and analysis.   
+
+  - **NA** means no value exists (missing data).  
+  - **""** is a real character value — it is a empty string which contains zero characters.  
+```{r Prompt 1}
+
+
+```
+
+## Column Names
+✍️ your task
+
+- Get the name of the columns in the data frame df_attrition.org
+
+📝️ R commands 
+
+- names() display the names (columns) of an object
+
+```{r}
+
+```
+
+## Pipeline operator %>% 
+
+It is very handy tie together multiple functions in a sequence of operations. The simplest operation is to show an object, which you do by naming it.
+
+✍️ your task
+
+- Get the names of the columns of df_attrition.org, using the name of the object as the first operation.
+
+📝️ R commands
+
+- **%>%** pipe the output to one operation as the input of the next operation.
+
+```{r}
+
+
+```
+## Rename columns 
+
+✍️ your task
+
+- Change the name of the BusinessTravel column to Travel to a second dataframe df_attrition
+
+📝️ R commands
+
+- **rename()**: change the name of a dataframe variable (Column)
+
+```{r}
+
+```
+## Remove variables (columns)
+
+
+✍️ your task
+
+- Manually inspect the Over18 column and realize that a non-employee is underage.
+- Remove the column Over18
+
+📝️ R commands
+
+- **select()**: Pick specific columns from a data frame (or tibble). You can include columns by naming them, or exclude columns by putting a minus **-** in front of their names..
+
+
+```{r}
+                                     
+```
+
+## Sort observations
+
+✍️ your task
+
+- sort employees by their Age in ascendant and descendant order and show the 3 first employees
+
+📝️ R commands
+
+- **arrange()**: reorder a data frame 
+- **desc()**: within arrange reorder in descending order
+- **head()**: show only the first observations (employees) of the data frame
+- **tail()**: show the last observations (employees) of the data frame
+
+💡 As we do not want to show in our notebook 1473 rows, we can use the pipe operator to reduce the number of observations shown by piping the output of arrange to head(), limiting the number of shown observations.
+```{r}
+
+
+```
+
+
+
+## Missing values
+
+✍️ your task
+
+- Display the number of employees in the original data
+- create a df_missing with employees (records or rows) with missing values
+- Display the number of employees with missing data
+
+📝️ R commands
+
+- **nrow()** count the number of observations (Employees)  
+- **if_any(everything(), is.na)** check if any column has NA values.  
+- **complete.cases(.)**  check which cases (observations or employees) are complete.
+
+💡 **.** is a placeholder for the data being pipe in.
+```{r}
+
+
+
+```
+## Remove observations (rows).
+✍️ your task
+
+After reviewing the missing records, we decide to delete the only record  with missing employee number  
+- We create a new dataframe **df_attrition** without the record with missing employee number.
+- display the number of employees after removing that 
+
+📝️ R command
+
+- **is.na()**: check if the a column has missing values.
+```{r}
+
+
+```
+
+## Managing data types 
+
+**Is there any variable in our dataset with a type you were not expecting?**
+
+✍️ your task
+
+- display the type of each variable (column)
+- Create a column MonthlyIncomeNum  converting MonthlyIncome to numeric using as.numeric()
+- order by the new column and display last observations.
+- convert MonthlyIncome to numeric using parse_number()
+
+📝️ R commands
+
+- **str()**:
+- **mutate()**: creates/modify columns as functions of existing variables. 
+- **as.numeric()**: convert the variable into numeric, generating NA when data is not numeric.
+- **parse_number()**: convert the variable into numeric, designed for messy real-world data, ignoring any character such as commas, currency symbols and surrounding text.
+
+💡 We can observe that **MonthlyIncome** appears as a string variable. Why? when reading the .csv file it founds non numeric characters in some observations, and blank is a string so it assign the type string to the variable. So we need to programmatically change the type to numeric.
+
+Nonetheless, **MonthlyRate** appears as integer. Why? because although there is a missing observation (NA), NA is nothing, so as all other observations are integer, it assign the type to integer. 
+
+```{r}
+
+
+```
+
+🔦 **Did you see the console Warning?**
+
+This warning, tells us that there was 1 row that it cannot convert to numeric. 
+*Let's look which employee is causing problems!*
+
+```{r}
+
+
+
+
+```
+
+🔦 Yes the **2028\$\$** and generated a NA for that observation. I think that someone type $ by mistake so I ask R to select only numbers and ignore non numeric characters using parse_number().
+
+```{r}
+
+
+```
+
+### Logical variables
+
+✍️ your task
+
+- Convert Attrition to a logical variable
+
+📝️ R commands
+
+- **if_else(condition,value if TRUE, alue if FALSE))**: evaluates condition and generates the value depending on the condition.
+
+💡 A variable of type logic is a Binary variable with values true and false that we can use in regression analysis
+```{r}
+
+ 
+```
+
+
+
+
+## Working with a subset of variables
+
+Looking at all variables at the same time, it a bit fuzzy, so we can select just some variables of interest and look at them separately. 
+
+✍️ your task
+
+- Create a new data set **df_attrition_short** selecting columns **EmployeeNumber, Attrition, Age, Gender and MonthlyIncome**
+
+
+```{r}
+
+```
+
+✍️ your task
+
+- Using df_attrition_short data frame, filter  employees whose salary is greater than 19.900
+
+
+```{r}
+
+```
+
+✍️ your task
+
+- make complex selections, i.e. identify Male employees over 50 which earnings lower than 2400
+
+
+```{r}
+
+
+```
+
+
+
+## Basic statistics
+
+✍️ your task
+
+- Get basic statistics of the data frame variables.
+
+📝️ R commands
+
+- **summary()**: For numerical variables it provides mean, min, max, Quartiles and number of mixing values.
+
+💡 You do not have to tell R which variables are numerical. For non numerical variables it indicates the type and the number of observations. 
+
+ 
+```{r}
+
+
+```
+
+## Summarise data
+
+✍️ your task
+
+- Find out the number of persons by JobRole
+
+📝️ R commands
+
+- **group_by()**: group observations for each value of the grouped variables. 
+- **summarise()**: It returns one row for each combination of grouping variables;
+
+*When you have to combine many function together you see the value of the pipe operator!*
+```{r}
+
+
+```
+
+✍️ your task
+- Calculate the average salary of people working overtime
+
+```{r}
+
+```
+
+💡 By default, when an observation is missing it is not possible to calculate the mean (Similarly to what excel does), but if you type ?(mean), you can see that there an argument that ignore the missing values, calculating the mean over the existing values. the argument is *na.rm=TRUE*, and you can obtain the mean, without removing observations. 
+```{r}
+
+
+```
+
+✍️ your task
+
+- How many employees belong to each department?
+
+
+```{r}
+
+```
+ 
+✍️ your task
+
+- Create a new column that consist of a 5% increment of Salary.
+- display first 12 columns
+
+```{r, eval = F}
+
+```
+
+## Save modified data
+
+✍️ your task
+
+- Save the modified data frame df_attrition into a file named df_attrition.rds within the data directory
+
+📝️ R commands
+
+- **saveRDS()**: saves a R object into the computer disk. 
+
+💡 Files with the **.rds** extension (R Data single object) open in R or RStudio automatically.
+
+```{r save df_attrition}
+
+
+
+```
+
+**Congratulations. We have completed our first task in R!**

@@ -8,7 +8,7 @@ date: "`r Sys.Date()`"
 output: 
   html_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 4
     toc_float: true
 
     code_folding: hide
@@ -23,11 +23,16 @@ knit: (function(inputFile, encoding) {
 # Execute your Rnotebook
 
 - **Run Code by line**: Use `Ctrl + Enter` (Windows) or `Cmd + Enter` (Mac) to run lines of code directly from the chunks (scripts contained in the grey areas).
-- **knit the complete Rnotebook**: press the 🧶 Knit buttom at the top 
+- **knit the complete Rnotebook**: press the 🧶 Knit buttom at the top. It will create a web (.html) page in the reports directory. 
 
 # Setup
 
-## Define directories
+### 📝 Create a project
+
+- To put this into practice, the first thing you have to do in R is create a project 📦 in a new directory so you can keep all the class exercises in a folder 📂. We will create another project for the KMPG project, so you do not mix files from one project with the other.
+- This approach of organizing work into projects offers a significant benefit: Relative paths work consistently, so you can share your work more easily (they are much more portable).
+
+### 📝 Define directories
 
 We will organize your project files into specific folders within the main project directory. ***If they do not exist, create the following directories and move this Rnotebook —task1_introduction.Rmd— to the notebooks directory ***.
 
@@ -38,7 +43,13 @@ This directory will be created the first time you knit (Execute) this Rnotebook.
 
 * **reports** to store the web (HTML) output files generated when knitting.
 
-## Load Packages
+### Load Packages
+
+📝️ R commands 
+
+- **library()** function to load a package.
+
+The first command we will execute is library(tidyverse) within a chunk (Grey area ⬜ )
 
 - Base R has basic functions (commands), but we can extend R with +22,000 packages. 
 
@@ -46,7 +57,7 @@ This directory will be created the first time you knit (Execute) this Rnotebook.
 
 - **here()** package helps us to work neatly in the project working directory when I move Rnotebooks between computers
 
-### Do not worry to see
+#### Do not worry to see
 
     ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
     
@@ -78,13 +89,12 @@ library(tidyverse)
 # ==============================================================================
 
 library(here)
-knitr::opts_knit$set(root.dir = here::here())
 
 ```
-**Are you feeling a bit lost here?** 
+**🔦 Don’t Panic! In simple Words...** 
 
 
-- Think of R like a TV with multiple streaming apps installed and a single remote control with a button labeled **filter**. 
+- Think of R like a TV with multiple streaming apps installed and you have a single remote control with a button labeled **filter**. 
   Base R comes with a built-in app called stats, which includes a function called ***filter()*** that runs when you press the **filter** button. 
   
   When you load dplyr, you install another app that also has a function ***filter()*** to run when you press the **filter** button.
@@ -101,20 +111,34 @@ knitr::opts_knit$set(root.dir = here::here())
   “No, I meant the ***filter()*** function from the built-in app.”  
   
 
-In future tasks, the setup chunk will be **hidden** from the notebook output by adding *,include=FALSE* to the chunk name, however R will load packages and mask functions without displaying the above messages.
+In future tasks, the *setup* chunk will be **hidden** from the notebook output by adding *,include=FALSE* to the chunk name, however R will load packages and mask functions without displaying the above messages.
 
 # where am I ?
 
-To know in which directory I am working I use *getwd()*
-```{r}
-getwd()
+✍️ your task
+
+- Show in which directory you are working
+
+📝️ R commands 
+
+- **getwd()**: get working directory
+```{r get_working_directory}
+
+
 ```
 
 # what files do I have in my project?
 
-To know which files I have in my project directory I use *dir()*
-```{r}
-dir()
+✍️ your task
+
+- print the files you have in your project directory  
+
+📝️ R commands 
+
+- **dir()**: shows the objects in the directory
+```{r list_directory}
+
+
 ```
 
 
@@ -123,41 +147,52 @@ dir()
 
 ### Define and show values
 
-vales are simple variables to be used in any moment. 
+**values** are simple variables you define to used latter in your programs. 
+
+✍️ your task
+
+- define my_name, city_of_birth and numbers from 0 to 9
+- show them in the web page you create with knit.
+
+📝️ R commands 
 
 - Assign a name to a variable. **<-** and **=** are used indistinctly 
 
-      myname = "Jesús"
-      myname <- "Jesús"
+      my_name = "Jesús"
+      my_name <- "Jesús"
     
 - **cat()**  function to concatenate strings and display them
-```{r define values}
-my_name = "Jesús"
-myname <- "Jesús"
+```{r define_values}
 
-city_of_birth = "Avila"
-
-cat(my_name, "was born in ", city_of_birth)
-
-numbers=0:9
-cat("the numbers are:", numbers)
 ```
 
 ### Define and show data
 
-Normally you work with structured data like data frames (tibble in tidyverse) where you define structure information, like the full name wich has to parts, a name and a surname, and you can work with the full name, or with each part separately depending on your needs
 
-- **print()**  function to print structure data.  cat() cannot handle this type of data, so we use print() instead.
-```{r Define data}
+💡 Normally you work with **structured data** like data frames where you define the information in an organized way. For example, a full name contains two parts, a name and a surname, and if you define an structured object for full name you can work with the complete name, or with each part separately depending on your needs
 
-myfullname = tibble(name="Jesús",
-                    surname="García Romanos")
+✍️ your task
 
-print(myfullname)
-print(myfullname["surname"])
+- Define a data frame containing your name and your surname
+- print it
 
+📝️ R commands 
 
-cat(myfullname$name,myfullname$surname)
+- **tibble()** function to define a data frame, a structure object with several parts.
+
+- **print()**  function to print an structured object.  cat() can only handle simple strings, so for this type of data we use print() instead.
+
+- With cat() we have to use **\$** to specify which part of the object we want to use, i.e. myfullname$name will use just the forename. As this part is a string, we can use cat() to print it.
+
+Print will show the structure, and the content. With cat you need to indicate each string separately. 
+```{r Define_data}
+
 
 
 ```
+
+💡 Deep Dive:  
+
+  - In RStudio, we see structured objects in the data section of the tab environment.  
+  - R has several data types. Dataframes and tibbles (from tidyverse) are two-dimensional tables, similar to spreadsheets. Each column is a variable (e.g., employee name, salary), and each row is an observation (e.g., employee).  
+  - Other data types include matrices, which are similar to dataframes but can contain only one type of value (Numbers, strings, booleans, etc), and lists, which are highly flexible and can store elements of any type or size. Notably, a dataframe is actually a special kind of list where each column is the same length.

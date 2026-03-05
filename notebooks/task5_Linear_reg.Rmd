@@ -1,0 +1,283 @@
+---
+# Rmarkdown header. it use Use the YAML syntax. 
+# Just copy the ---YAML block --- and change title, subtyle, author and date
+title: "Task 5 linear regression" 
+subtitle: "People Analytics"
+author: "Jesús García Romanos"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    code_folding: hide
+
+# store the output in the subdirectory reports
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir=here::here("reports")) }) 
+---
+
+# Setup
+
+Within project directory, if they do not exists, create the following directories.
+
+- **data** to store the data created. R native dataformat is rds.\
+- **reports** to store the HTML output files created when knitting.
+
+```{r setup, include=FALSE}
+#this chunk is hidden from the notebook output by adding ,include=FALSE to the chunk name.
+
+library(tidyverse) 
+
+library(here)
+
+```
+
+# Empirical Analysis
+
+In the KMPG project, we want to understand Company XXX's current situation from the perspective of its people to gain insight into their reality in terms of promotions, salaries, turnover, and other factors that may be affecting their ability to attract and retain talent.
+
+In real-life projects, you will start revising the literature on potential determinants of the companies' ability to attract and retain talent to propose a hypothesis that we will contrast with our data through **regression analysis**. Understanding the determinants of talent management is outside the scope of the subject of people analytics. Still, you must apply the knowledge you have acquired in other subjects of the Master in Talent Management to propose your hypothesis. 
+
+**What is regression analysis?**
+
+*Regression* is a statistical method that attempts to determine the strength and character of the relationship between a dependent variable and one or more independent variables. Linear regression is the most common form of this technique. Also called simple regression or ordinary least squares (OLS)
+
+### Linear Regression
+
+**Propose Hypothesis**
+
+In our attrition database, we are interested in analyzing the determinants of monthly income. After revising the literature on potential determinants of income, we propose our hypothesis that **job level is the primary determinant of monthly income**. 
+
+**Model specification**
+
+To check our hypothesis with our data set, we specify the very basic functional form, which is just a linear function such as:
+
+𝑦=𝛽~0~+𝛽~1~x
+
+This basic function proposes a relationship between an independent variable (𝑥) and a dependent variable (𝑦), this is: 
+
+    A change in X leads to a qualitative and a quantitative change in Y
+
+We need to estimate this relationship in qualitative terms (is this relation positive or negative?) and in quantitative terms (how big or small should be the change in X to induce a change in Y?)
+
+Moreover, there might be other (random) elements affecting Y that are out of the scope of my relationship.
+
+These other elements represented an error in the proposed relationship and should be accounted for. These errors could come from (among others):
+
+- Other variables, apart from x, which determine our dependant variable 
+- Unobservable variables affecting Y apart from X
+- Errors in collecting statistics.
+- Probabilistic changes in Y that we cannot properly measure.
+
+
+These other elements are notated by a (probabilistic) error term (𝜀) so our model looks like:
+
+𝑦=𝛽~0~+𝛽~1~x +𝜀
+
+Where, again:
+
+- y is the dependent or endogenous variable – It’s an observable variable.  
+- x is the independent or exogenous variable – It’s an observable variable.  
+- 𝛽~0~ and 𝛽~1~ are parameters – **They have to be estimated**.  
+- In the case of 𝛽~1~, it captures the change in Y once X changes (properly, 𝛽~1~ is the slope of the function).  
+- 𝜀 is the error term.  
+
+
+**Bonus: [** In dynamic data sets, those data sets where you collect the same data along the time, for instance, you have the monthly salary of each employee since they entered the company, you will need to  specify the spatial and temporal dimension, so that the model would look like:
+
+**𝑦~it~=𝛽~0~+𝛽~1~x~it~ +𝜀~it~**  where **i** represent each employee i=1,2, ... and **t** the time period t = 2025,2024, ...  **]**
+
+**Model estimation**
+
+Once you have specify your model we must estimate the parameters using our data set, from where we will get the estimated values: 𝛽^\^^~0~ and 𝛽^\^^*~1~ note: the hat, circumflex or caret **^** is used in data analysis and statistics to indicate that the value is an estimation of a unknown real parameter. 
+
+How is the estimation made? The most common method is the Ordinary Least Squares (OLS) estimator.
+
+***Ordinary Least Squares (OLS***)
+
+The idea of the (OLS) principle is to choose parameter estimates that minimize the (squared) error term --- this is the distance between the data we observe and the model we predict. In the simplest specification, the line minimizes the sum of the squared error terms.
+
+
+```{r, echo=FALSE, out.width="70%"}
+# ![](img/OLS.png) can be use to include relative paths without the here() proyect base paths.
+knitr::include_graphics(here::here("img", "OLS.png"))
+```
+
+We have seen the main concepts of regression analysis and ordinary least squares, so... let's go back to our Attrition data set and imagine that we want to analyze the dependence relationship between some variables. 
+
+
+### Read the attrition data set.
+
+📝 your task
+
+- read df_atrition.rds
+```{r}
+
+
+```
+
+
+### Plot our hypothesis variables.
+
+We have hypothesized that Monthly Income is determined by Job level. 
+
+📝 your task
+
+- Plot those variables together with plot and ggplot
+
+📝️ R commands
+
+- **plot()**: allows to draw scatter plots of two variables
+
+
+```{r}
+
+
+```
+
+💡 Best, use the ggplot2 package to create graphics following the Grammar of Graphics [The Grammar of Graphics](https://towardsdatascience.com/a-comprehensive-guide-to-the-grammar-of-graphics-for-effective-visualization-of-multi-dimensional-1f92b4ed4149/). ggplot2 builds complex graphics by layering different components.. 
+
+💡 Next chunk shows how to display a graph which is stored in disk.
+```{r, echo=FALSE, out.width="90%"}
+# ![](img/Grammar_of_graphics.png) can be use to include relative paths without the here() project base paths.
+knitr::include_graphics(here::here("img", "Grammar_of_graphics.png"))
+```
+
+📝 your task
+
+- Plot those variables together with ggplot using theme_bw 
+
+📝️ R commands
+
+- **ggplot()**: draw advance graphics plots within a canvas.
+- **aes(x=var1,y=var2, color = var3)**: within ggplot indicates x and y variables and color variable
+- **geom_point()** add a scatter plot to the canvas.
+- **theme_bw()**: one of the many themes to draw canvas. 
+
+🔦 The points of each employee have a different color, depending on gender. Compare the plot graphic and the ggpot one!
+
+```{r}
+
+
+```
+
+💡 Each layer of the image can be change separately. For example, you can change the aspect of the plot, just using another theme.
+
+📝 your task
+
+- Plot those variables together with ggplot using theme_classic 
+
+📝️ R commands
+
+- **theme_classic()**: A clasicc themes to draw canvas with less lines. 
+
+💡 You can find hundreds of plots without writing code at:
+
+- [The ggplot2 Extensions Gallery](https://exts.ggplot2.tidyverse.org/gallery/): The official hub for all packages that expand ggplot.
+- [The R Graph Gallery](https://r-graph-gallery.com/): A fantastic visual resource that shows the code alongside the result.
+
+```{r}
+
+
+```
+
+### Estimate our hypotheses
+
+📝 your task
+
+- Estimate a model where Monthly income is predicted by job level.
+
+📝️ R commands
+
+- **lm(dep_var ~ indp_var, data = source )**:To estimate our  model we use the lm(formula,data) function. 
+- **.** you can pipe the input and use . as an indicator of the input. 
+
+```{r}
+
+
+```
+
+📝 your task
+
+- Add the line of the regression to our ggplot.
+
+📝️ R commands
+
+- **geom_smooth(method = "lm", formula = y ~ x, se = FALSE)**: draws a line representing the linear model. 
+```{r}
+
+
+```
+
+📝 your task
+
+- Estimate a model where Monthly income is predicted by job level only for employees over 50.
+
+
+```{r}
+
+
+```
+
+💡 When looking at all employees it seems that there is no difference between men and women salaries, but if we focus on older employees, women seems to have lower salaries than men. 
+
+### Multiple Linear Regression
+
+💡 This is the most common functional form, as dependent variables (Y) are not only determined by a single variable but multiple ones.
+
+
+📝 your task
+
+- explore possible independent variable looking at correlation plots
+```{r}
+
+
+```
+
+📝 your task
+
+- Let's try first regressin monthly income with Job Level, Total WorkingYears and Gender
+
+```{r}
+
+```
+
+💡 *note that lm has converted the Gender char into a factor, and provide the coefficient of being a male*
+
+📝 your task
+
+- Let's add the Number of Companies Worked and Years At Company
+
+```{r}
+
+```
+
+It seems that neither the Number of companies worked for nor the years at the company influences monthly income.
+
+💡 * But... We find that total working years influence the monthly salary, but when we decompose it into the number of companies worked and the number of years at each company, only the former influences the monthly salary.
+
+ your task
+
+- Let's try regressing monthly income with Job Level, NumCompaniesWorked, YearsAtCompany and Gender
+
+```{r}
+
+
+
+```
+
+💡 We find that the total working years, influence the monthly salary, but if we decompose it with the number of companies worked and the number of years at company, only the first one influence monthly salary.
+
+💡 ***Have you noticed the R-squared and F-statistics, and how they change between the different models?***
+
+R-squared explains the percentage of variance of the dependent variable that can be explained by the explanatory variables, and the F-statistic indicates whether the overall model is significant. 
+
+*With R, you can test multiple hypotheses quickly and try to deep dive into some predictors of your variable of interest!!*
+
+
+**Congratulations, we have finished our regression analysis**
+
+
