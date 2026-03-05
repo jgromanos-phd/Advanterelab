@@ -19,7 +19,7 @@ To run these examples, make sure you have the following installed:
 * [RStudio](https://posit.co/download/rstudio-desktop/)
 * Recommended Packages: `tidyverse`
 
-## icons used in notebooks
+## Icons used in notebooks
 
 ✍️ Your task.
 📝️ R commands.
